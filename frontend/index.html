@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Detect</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #DCF4F1;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 8px;
+            color: #0A1A3D;
+            margin-bottom: 100px;
+        }
+        .input-container {
+            position: relative;
+            width: 350px;
+            margin-bottom: 40px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid black;
+            border-radius: 25px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            background-color: white;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #0A1A3D;
+            color: white;
+            padding: 12px 40px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px 0 30px 0;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0D2553;
+        }
+    </style>
+</head>
+<body>    <div class="container">
+        <h1>Crypto Algorithm Identifier</h1>
+        <label for="ciphertext">Enter Ciphertext (comma-separated bytes):</label><br>
+        <input type="text" id="ciphertext" placeholder="e.g. 48, 90, 168, 254..."><br>
+        <button onclick="predictAlgorithm()">Predict Algorithm</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        // Function to handle the API request
+        function predictAlgorithm() {
+            // Get the user input and convert it to an array of integers
+            let inputText = document.getElementById("ciphertext").value;
+            let ciphertextArray = inputText.split(",").map(Number);
+
+            // Validate the input
+            if (ciphertextArray.length === 0 || ciphertextArray.includes(NaN)) {
+                document.getElementById("result").innerHTML = "<span class='error'>Please enter a valid ciphertext.</span>";
+                return;
+            }
+
+            // Make a POST request to the Flask backend API
+            fetch("http://localhost:5000/predict", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ "ciphertext": ciphertextArray })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server error');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.algorithm) {
+                    document.getElementById("result").innerHTML = "Predicted Algorithm: " + data.algorithm;
+                } else {
+                    document.getElementById("result").innerHTML = "<span class='error'>Error: " + data.error + "</span>";
+                }
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML = "<span class='error'>Error connecting to the server.</span>";
+            });
+        }
+    </script>
+</body>
+</html>
