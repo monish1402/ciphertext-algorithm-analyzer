@@ -4,7 +4,7 @@ CipherDetect is an AI-powered cryptographic algorithm analyzer designed to ident
 
 ## Features
 
-- **AI-Powered Detection**: Utilizes deep learning models (XGBoost, MLP, Random Forest) to analyze and classify cryptographic algorithms.
+- **AI-Powered Detection**: Utilizes deep learning models (XGBoost, MLP) to analyze and classify cryptographic algorithms.
 - **Wide Algorithm Coverage**: Supports AES, DES, 3DES, RSA, Blowfish, SHA, and other cryptographic methods.
 - **Feature Extraction**: Extracts statistical and frequency-based features (entropy, skewness, Fourier transforms, chi-square analysis, etc.).
 - **Obfuscation Resilience**: Capable of identifying encryption methods even with partial or altered ciphertext.
